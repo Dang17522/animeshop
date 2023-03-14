@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body th:onload="getAll()">
+	<!-- start section content -->
+	<div class="content-body">
+		<div class="warper container-fluid">
+			<div class="all-patients main_container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card">
+							<div class="card-header fix-card">
+								<div class="row">
+									<div class="col-8">
+										<h4 class="card-title">Danh sách Shipper</h4>
+									</div>
+									<div class="col-4 float-end">
+										<button type="button" data-bs-toggle="modal"
+											data-bs-target="#addModal" class="btn btn-primary float-end">Thêm
+											mới</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<form class=" col-md-6 mb-3">
+									<div class="input-group">
+										<input type="text" class="form-control" id="keyword_search"
+											aria-label="Amount (to the nearest dollar)"
+											placeholder="Nhập từ khóa tìm kiếm"
+											th:attr="onkeydown='doSearch()'">
+										<div class="input-group-append">
+											<span class="input-group-text bg-white"> <i
+												class="fas fa-search"></i>
+											</span>
+										</div>
+									</div>
+								</form>
+								<div class="table-responsive">
+									<table class="table table-borderless table-hover">
+										<thead class="text-center">
+											<tr>
+												<th class="text-primary">Mã Shipper</th>
+												<th class="text-primary">Tên Shipper</th>
+												<th class="text-primary">SDT Shipper</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody id="dataShipper" class="text-center">
+										</tbody>
+									</table>
+									<nav>
+										<ul class="pagination justify-content-center mt-5">
+											<li class="page-item"><a th:attr="onclick='btn_first()'"
+												class="page-link text-primary"><i
+													class="fas fa-step-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_previous()'"><i
+													class="fas fa-fast-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_next()'"><i
+													class="fas fa-fast-forward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_last()'"><i
+													class="fas fa-step-forward"></i></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End section content -->
+
+
+	<!-- ADD MODAL -->
+	<div class="modal fade" id="addModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm mới
+						Shipper</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group">
+							<label class="form-label">Tên Shipper</label> <input
+								class="form-control" type="text" id="name"
+								placeholder="Tên Shipper"> <span class="text-danger"
+								id="name_error"></span>
+						</div>
+						<div class="form-group">	
+							<label class="form-label">SDT Shipper</label> <input
+								class="form-control" type="text" id="phone"
+								placeholder="SDT Shipper"> <span class="text-danger"
+								id="phone_error"></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doCreate()'">Thêm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT MODAL -->
+	<div class="modal fade" id="editModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông
+						tin Shipper</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group">
+							<input type="hidden" id="idEdit" />
+							<div class="form-group">
+								<label class="form-label">Tên Shipper</label> <input
+									class="form-control" type="text" id="nameEdit"
+									placeholder="Tên Shipper">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="form-group">
+								<label class="form-label">SDT Shipper</label> <input
+									class="form-control" type="text" id="phoneEdit"
+									placeholder="SDT Shipper">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Huỷ</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doUpdate()'">Cập nhật</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/admin/assets/js/management/shipper.js}"></script>
+</body>
+</html>
+
+

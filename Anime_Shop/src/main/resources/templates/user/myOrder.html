@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Lịch sử hóa đơn</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="product-tab_area-2" style="margin-bottom: 90px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="sp-product-tab_nav">
+						<div class="row">
+							<div class="col-md-12 text-center mb-2">
+								<b class="text-uppercase"
+									style="color: #a8741a; font-size: 25px;">Thông tin và trạng
+									thái hóa đơn</b>
+							</div>
+						</div>
+						<div class="product-tab">
+							<ul class="nav product-menu">
+								<li><a class="active" data-toggle="tab" href="#new"><span>Đang
+											chờ xử lý</span></a></li>
+								<li><a data-toggle="tab" href="#shipping"><span>Đang
+											giao</span></a></li>
+								<li><a data-toggle="tab" href="#success"><span>Đã
+											nhận hàng</span></a></li>
+								<li><a data-toggle="tab" href="#cancel"><span>Đã
+											bị hủy</span></a></li>
+							</ul>
+						</div>
+						<div class="tab-content uren-tab_content">
+							<div id="new" class="tab-pane active show" role="tabpanel">
+								<div class="product-description">
+									<div class="row" th:if="${ordersNew.empty}">
+										<div
+											class="col-md-12 text-center mb-2 alert alert-warning text-danger">
+											<b class="text-uppercase" th:if="${ordersNew.empty}"
+												style="font-size: 15px;">Thông tin và trạng thái hóa đơn
+												trống!</b>
+										</div>
+									</div>
+									<table class="table align-middle mb-0 bg-white"
+										th:unless="${ordersNew.empty}">
+										<thead style="background-color: #a8741a; color: white;">
+											<tr>
+												<th class="text-center">Địa chỉ và số điện thoại</th>
+												<th class="text-center">Ngày đặt</th>
+												<th class="text-center">Phương thức thanh toán</th>
+												<th class="text-center">Người giao hàng</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="item: ${ordersNew}">
+												<td class="text-center">
+													<div class="d-flex align-items-center">
+														<img th:src="@{|/assets/images/${item.user.avatar}|}"
+															alt="" style="width: 55px; height: 55px"
+															class="rounded-circle" />
+														<div class="ms-3">
+															<p class="fw-bold mb-1" th:text="${item.phone}"></p>
+															<p class="text-muted mb-0" th:text="${item.address}"></p>
+														</div>
+													</div>
+												</td>
+												<td class="text-center">
+													<p class="fw-normal mb-1"
+														th:text="${#dates.format(item.createDate, 'dd-MM-yyyy HH:mm')}"></p>
+												</td>
+												<td class="text-center"><span style="font-size: 12px;"
+													class="badge badge-success rounded-pill d-inline"
+													th:text="${item.paymentMethod.name}"></span></td>
+												<td class="text-center" th:text="${item.shipper.name}"></td>
+												<td><a type="button"
+													class="btn btn-link btn-sm btn-rounded"
+													th:href="@{|/anime-shop/order-detail/${item.id}|}"> <i
+														title="Xem chi tiết" class="text-info fas fa-info-circle"></i>
+												</a></td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row" th:unless="${ordersNew.empty}">
+										<div class="col-lg-12">
+											<div class="kenne-paginatoin-area">
+												<div class="row">
+													<div class="col-lg-12">
+														<ul class="kenne-pagination-box primary-color">
+															<li
+																th:style="${currentPage == 1} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+																<a
+																th:href="@{${currentPage > 1} ? ${'?page=' + (currentPage - 1)}}">Trước</a>
+															</li>
+															<li th:each="i: ${#numbers.sequence(1, totalPagesNew)}"
+																th:class="${currentPage == i} ? 'active' : ''"><a
+																th:href="@{'?page=' + ${i}}" th:text="${i}"></a></li>
+															<li
+																th:style="${currentPage == totalPagesNew} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+																<a class="Next"
+																th:href="@{${curretnPage < totalPagesNew} ? ${'?page=' + (currentPage + 1)}}">Tiếp</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="shipping" class="tab-pane" role="tabpanel">
+								<div class="row" th:if="${ordersShipping.empty}">
+									<div
+										class="col-md-12 text-center mb-2 alert alert-warning text-danger">
+										<b class="text-uppercase" style="font-size: 15px;">Thông
+											tin và trạng thái hóa đơn trống!</b>
+									</div>
+								</div>
+								<table class="table align-middle mb-0 bg-white"
+									th:unless="${ordersShipping.empty}">
+									<thead style="background-color: #a8741a; color: white;">
+										<tr>
+											<th class="text-center">Địa chỉ và số điện thoại</th>
+											<th class="text-center">Ngày đặt</th>
+											<th class="text-center">Phương thức thanh toán</th>
+											<th class="text-center">Người giao hàng</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item: ${ordersShipping}">
+											<td class="text-center">
+												<div class="d-flex align-items-center">
+													<img th:src="@{|/assets/images/${item.user.avatar}|}"
+														alt="" style="width: 55px; height: 55px"
+														class="rounded-circle" />
+													<div class="ms-3">
+														<p class="fw-bold mb-1" th:text="${item.phone}"></p>
+														<p class="text-muted mb-0" th:text="${item.address}"></p>
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<p class="fw-normal mb-1"
+													th:text="${#dates.format(item.createDate, 'dd-MM-yyyy HH:mm')}"></p>
+											</td>
+											<td class="text-center"><span style="font-size: 12px;"
+												class="badge badge-success rounded-pill d-inline"
+												th:text="${item.paymentMethod.name}"></span></td>
+											<td class="text-center" th:text="${item.shipper.name}"></td>
+											<td><a type="button"
+												class="btn btn-link btn-sm btn-rounded"
+												th:href="@{|/anime-shop/order-detail/${item.id}|}"> <i
+													title="Xem chi tiết" class="text-info fas fa-info-circle"></i>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row" th:unless="${ordersShipping.empty}">
+									<div class="col-lg-12">
+										<div class="kenne-paginatoin-area">
+											<div class="row">
+												<div class="col-lg-12">
+													<ul class="kenne-pagination-box primary-color">
+														<li
+															th:style="${currentPage == 1} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a
+															th:href="@{${currentPage > 1} ? ${'?page=' + (currentPage - 1)}}">Trước</a>
+														</li>
+														<li
+															th:each="i: ${#numbers.sequence(1, totalPagesShipping)}"
+															th:class="${currentPage == i} ? 'active' : ''"><a
+															th:href="@{'?page=' + ${i}}" th:text="${i}"></a></li>
+														<li
+															th:style="${currentPage == totalPagesShipping} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a class="Next"
+															th:href="@{${curretnPage < totalPagesShipping} ? ${'?page=' + (currentPage + 1)}}">Tiếp</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="success" class="tab-pane" role="tabpanel">
+								<div class="row" th:if="${ordersSuccess.empty}">
+									<div
+										class="col-md-12 text-center mb-2 alert alert-warning text-danger">
+										<b class="text-uppercase" style="font-size: 15px;">Thông
+											tin và trạng thái hóa đơn trống!</b>
+									</div>
+								</div>
+								<table class="table align-middle mb-0 bg-white"
+									th:unless="${ordersSuccess.empty}">
+									<thead style="background-color: #a8741a; color: white;">
+										<tr>
+											<th class="text-center">Địa chỉ và số điện thoại</th>
+											<th class="text-center">Ngày đặt</th>
+											<th class="text-center">Phương thức thanh toán</th>
+											<th class="text-center">Người giao hàng</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item: ${ordersSuccess}">
+											<td class="text-center">
+												<div class="d-flex align-items-center">
+													<img th:src="@{|/assets/images/${item.user.avatar}|}"
+														alt="" style="width: 55px; height: 55px"
+														class="rounded-circle" />
+													<div class="ms-3">
+														<p class="fw-bold mb-1" th:text="${item.phone}"></p>
+														<p class="text-muted mb-0" th:text="${item.address}"></p>
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<p class="fw-normal mb-1"
+													th:text="${#dates.format(item.createDate, 'dd-MM-yyyy HH:mm')}"></p>
+											</td>
+											<td class="text-center"><span style="font-size: 12px;"
+												class="badge badge-success rounded-pill d-inline"
+												th:text="${item.paymentMethod.name}"></span></td>
+											<td class="text-center" th:text="${item.shipper.name}"></td>
+											<td><a type="button"
+												class="btn btn-link btn-sm btn-rounded"
+												th:href="@{|/anime-shop/order-detail/${item.id}|}"> <i
+													title="Xem chi tiết" class="text-info fas fa-info-circle"></i>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row" th:unless="${ordersSuccess.empty}">
+									<div class="col-lg-12">
+										<div class="kenne-paginatoin-area">
+											<div class="row">
+												<div class="col-lg-12">
+													<ul class="kenne-pagination-box primary-color">
+														<li
+															th:style="${currentPage == 1} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a
+															th:href="@{${currentPage > 1} ? ${'?page=' + (currentPage - 1)}}">Trước</a>
+														</li>
+														<li
+															th:each="i: ${#numbers.sequence(1, totalPagesSuccess)}"
+															th:class="${currentPage == i} ? 'active' : ''"><a
+															th:href="@{'?page=' + ${i}}" th:text="${i}"></a></li>
+														<li
+															th:style="${currentPage == totalPagesSuccess} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a class="Next"
+															th:href="@{${curretnPage < totalPagesSuccess} ? ${'?page=' + (currentPage + 1)}}">Tiếp</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="cancel" class="tab-pane" role="tabpanel">
+								<div class="row" th:if="${ordersCancel.empty}">
+									<div
+										class="col-md-12 text-center mb-2 alert alert-warning text-danger">
+										<b class="text-uppercase" style="font-size: 15px;">Thông
+											tin và trạng thái hóa đơn trống!</b>
+									</div>
+								</div>
+								<table class="table align-middle mb-0 bg-white"
+									th:unless="${ordersCancel.empty}">
+									<thead style="background-color: #a8741a; color: white;">
+										<tr>
+											<th class="text-center">Địa chỉ và số điện thoại</th>
+											<th class="text-center">Ngày đặt</th>
+											<th class="text-center">Phương thức thanh toán</th>
+											<th class="text-center">Người giao hàng</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="item: ${ordersCancel}">
+											<td class="text-center">
+												<div class="d-flex align-items-center">
+													<img th:src="@{|/assets/images/${item.user.avatar}|}"
+														alt="" style="width: 55px; height: 55px"
+														class="rounded-circle" />
+													<div class="ms-3">
+														<p class="fw-bold mb-1" th:text="${item.phone}"></p>
+														<p class="text-muted mb-0" th:text="${item.address}"></p>
+													</div>
+												</div>
+											</td>
+											<td class="text-center">
+												<p class="fw-normal mb-1"
+													th:text="${#dates.format(item.createDate, 'dd-MM-yyyy HH:mm')}"></p>
+											</td>
+											<td class="text-center"><span style="font-size: 12px;"
+												class="badge badge-success rounded-pill d-inline"
+												th:text="${item.paymentMethod.name}"></span></td>
+											<td class="text-center" th:text="${item.shipper.name}"></td>
+											<td><a type="button"
+												class="btn btn-link btn-sm btn-rounded"
+												th:href="@{|/anime-shop/order-detail/${item.id}|}"> <i
+													title="Xem chi tiết" class="text-info fas fa-info-circle"></i>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row" th:unless="${ordersCancel.empty}">
+									<div class="col-lg-12">
+										<div class="kenne-paginatoin-area">
+											<div class="row">
+												<div class="col-lg-12">
+													<ul class="kenne-pagination-box primary-color">
+														<li
+															th:style="${currentPage == 1} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a
+															th:href="@{${currentPage > 1} ? ${'?page=' + (currentPage - 1)}}">Trước</a>
+														</li>
+														<li th:each="i: ${#numbers.sequence(1, totalPagesCancel)}"
+															th:class="${currentPage == i} ? 'active' : ''"><a
+															th:href="@{'?page=' + ${i}}" th:text="${i}"></a></li>
+														<li
+															th:style="${currentPage == totalPagesCancel} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+															<a class="Next"
+															th:href="@{${curretnPage < totalPagesCancel} ? ${'?page=' + (currentPage + 1)}}">Tiếp</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

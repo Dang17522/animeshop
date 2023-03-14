@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<!-- Begin Kenne's Breadcrumb Area -->
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2>Shop Related</h2>
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li class="active">Login Or Register</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Breadcrumb Area End Here -->
+	<!-- Begin Kenne's Login Register Area -->
+	<div class="kenne-login-register_area">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-10 mx-auto col-xs-12">
+					<form action="/anime-shop/signup" enctype="multipart/form-data" method="post"
+						modelAttribute="user">
+						<span th:if="${mess}">
+							<p style="text-align: center;">[[${mess}]]</p>
+						</span>
+						<div class="login-form">
+							<h4 class="login-title">Register</h4>
+							<div class="row">
+								<div class="col-md-6 col-12 mb--20">
+									<label>UserName</label> <input type="text" name="username" 
+										placeholder="UserName" />
+								</div>
+								<div class="col-md-6 col-12 mb--20">
+									<label>FullName</label> <input type="text" name="fullname" 
+										placeholder="FullName from 4 to 20 characters" />
+								</div>
+								<div class="col-md-6">
+									<label>Email Address</label> <input type="email" name="email" 
+										placeholder="Email Address" />
+								</div>
+								<div class="col-md-6">
+									<label>Gender</label>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" value="true" 
+											style="margin-left: -150px" name="gender" 
+											id="flexRadioDefault1"> <label
+											class="form-check-label" for="flexRadioDefault1"> Boy
+										</label> <input class="form-check-input" type="radio" value="false"
+											style="margin-left: -150px" name="gender"
+											id="flexRadioDefault2" checked> <label
+											class="form-check-label" for="flexRadioDefault2">
+											Girl</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label>Password</label> <input type="password" name="password" 
+										placeholder="Password from 4 to 20 characters" />
+								</div>
+								<div class="col-md-6">
+									<label>Confirm Password</label> <input type="password" 
+										name="password2" placeholder="Confirm Password" />
+								</div>
+
+								<div class="col-md-6">
+									<label>Avatar</label> <input type="file"
+										class="form-control" id="customFile"
+										onchange="chooseFile(this)" name="imageFile" autofocus />
+								</div>
+								<div class="col-md-6">
+									<img src="@{|/assets/images/${user.imageName}|}"
+										class="rounded-circle mx-auto" id="image" width="120px"
+										height="120px" style="display: none;" />
+								</div>
+								<div class="col-12">
+									<button class="kenne-register_btn" >Register</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function chooseFile(fileInput) {
+			if (fileInput.files && fileInput.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					$('#image').attr('src', event.target.result);
+					document.getElementById("image").style.display = 'block';
+				}
+				reader.readAsDataURL(fileInput.files[0]);
+			}
+		}
+	</script>
+	
+	<!-- Kenne's Login Register Area  End Here -->
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+	
+	<div id="report" style="margin-left: 200px; margin-top: 100px">
+	<form action="/anime-shop/admin/report/month" method="get">
+		<div class="row mt-3">
+		<div class="col" style="margin-left: 20px">
+		</div>
+		<div class="col " style="margin-right: 400px">
+		<select class="form-select" aria-label="Tháng" name="month" id="month" th:attr="onclick='report()'" 
+			 style="width: 200px; margin-left: 380px;">
+			<option selected>Tháng</option>
+			<option th:value="1">Tháng 1</option>
+			<option value="2">Tháng 2</option>
+			<option value="3">Tháng 3</option>
+			<option value="4">Tháng 4</option>
+			<option value="5">Tháng 5</option>
+			<option value="6">Tháng 6</option>
+			<option value="7">Tháng 7</option>
+			<option value="8">Tháng 8</option>
+			<option value="9">Tháng 9</option>
+			<option value="10">Tháng 10</option>
+			<option value="11">Tháng 11</option>
+			<option value="12">Tháng 12</option>
+		</select>
+		
+		</div>
+		</div>
+	</form>
+
+	<div style="width: 900px; margin-left: 130px;">
+		<canvas id="myChart" style="margin-top: 10px"></canvas>
+		<p style="margin-left: 70px; font-family: 'Patrick Hand', cursive;"
+			th:each="re,index:${sum}" scope="row">
+			Số Lượng: [[${re.count}]] <br> Tổng:
+			[[${{#numbers.formatDecimal(re.sum,0,'COMMA',2,'POINT')}}]] VND
+		</p>
+	</div>
+
+	<script th:inline="javascript">
+var a = document.getElementById('month').value;
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+	type: 'line',
+	  options: {},
+    data: {
+        labels: [[${surveyMap.keySet()}]],
+        datasets: [{
+            label: 'Tháng: '+ [[${month}]] ,
+            data: [[${surveyMap.values()}]],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+<script th:inline="javascript" type="text/javascript">
+			function report() {
+				var url = '/anime-shop/admin/report/month?month= '+ $('#month').val() ;
+				$.get(url).done(function(data) {
+					$('#report').replaceWith(data);
+				});
+
+			}
+		</script>
+</div>
+</body>
+</html>

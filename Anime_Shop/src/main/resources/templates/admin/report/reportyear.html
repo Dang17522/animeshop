@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body>
+<div id="report" style="margin-left: 200px; margin-top: 100px">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+	<form action="/anime-shop/admin/report/year" method="get">
+	<div class="row mt-3" >
+		<div class="col" style="margin-right: 400px">
+		<select class="form-select" aria-label="Tháng" name="year" id="year" th:attr="onclick='report()'" style="width: 200px; margin-left: 450px;" >
+			<option selected>Năm</option>
+			<option value="2020">2020</option>
+			<option value="2021">2021</option>
+			<option value="2022">2022</option>
+			<option value="2023">2023</option>
+			<option value="2024">2024</option>
+			<option value="2025">2025</option>
+			<option value="2026">2026</option>
+			<option value="2027">2027</option>
+			<option value="2028">2028</option>
+			<option value="2029">2029</option>
+			<option value="2030">2030</option>
+			
+		</select>
+		</div>
+		
+	</form>
+	
+
+		<div style="margin: auto; width: 900px; margin-left: 130px" >
+    <canvas id="myChart"></canvas>
+    <p style="margin-left: 70px;font-family: 'Patrick Hand', cursive;" th:each="re,index:${sum}" scope="row">Tổng: [[${{#numbers.formatDecimal(re.sum,0,'COMMA',2,'POINT')}}]] VND</p>
+  </div>
+	<!-- Js Plugins -->
+	<script src="/assets/js/shopping-cart-app.js"></script>
+	<script src="/assets/js/vendor.min.js"></script>
+	<script src="/assets/js/plugins.min.js"></script>
+	<script src="/assets/js/main.min.js"></script>
+	<script src="/assets/js/select.js"></script>
+	
+	 <script th:inline="javascript">
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+	type: 'line',
+	  options: {},
+    data: {
+        labels: [[${surveyMap.keySet()}]],
+        datasets: [{
+            label: 'Năm: '+ [[${year}]] ,
+            data: [[${surveyMap.values()}]],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+<script th:inline="javascript" type="text/javascript">
+			function report() {
+				var url = '/anime-shop/admin/report/year?year= '+ $('#year').val() ;
+				$.get(url).done(function(data) {
+					$('#report').replaceWith(data);
+				});
+
+			}
+		</script>
+</div>
+</body>
+</html>

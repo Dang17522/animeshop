@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body th:onload="getAll()">
+	<!-- start section content -->
+	<div class="content-body">
+		<div class="warper container-fluid">
+			<div class="all-patients main_container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card">
+							<div class="card-header fix-card">
+								<div class="row">
+									<div class="col-8">
+										<h4 class="card-title">Danh sách bài viết</h4>
+									</div>
+									<div class="col-4 float-end">
+										<button type="button" data-bs-toggle="modal"
+											data-bs-target="#addModal" class="btn btn-primary float-end">Thêm
+											mới</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<form class=" col-md-6 mb-3">
+									<div class="input-group">
+										<input type="text" class="form-control" id="keyword_search"
+											aria-label="Amount (to the nearest dollar)"
+											placeholder="Nhập từ khóa tìm kiếm"
+											th:attr="onkeydown='doSearch()'">
+										<div class="input-group-append">
+											<span class="input-group-text bg-white"> <i
+												class="fas fa-search"></i>
+											</span>
+										</div>
+									</div>
+								</form>
+								<div class="table-responsive">
+									<table class="table table-borderless">
+										<thead class="text-center">
+											<tr>
+												<th class="text-primary">Mã</th>
+												<th class="text-primary">Tiêu đề</th>
+												<th class="text-primary">Nội dung</th>
+												<th class="text-primary">Lượt xem</th>
+												<th class="text-primary">Hình ảnh</th>
+												<th class="text-primary">Mô tả</th>
+												<th class="text-primary">Người tạo</th>
+												<th class="text-primary">Người sửa</th>
+												<th class="text-primary">Ngày tạo</th>
+												<th class="text-primary">Ngày sửa</th>
+												<th class="text-primary">Thuộc sản phẩm</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody id="dataPost" class="text-center">
+										</tbody>
+									</table>
+									<nav>
+										<ul class="pagination justify-content-center mt-5">
+											<li class="page-item"><a th:attr="onclick='btn_first()'"
+												class="page-link text-primary"><i
+													class="fas fa-step-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_previous()'"><i
+													class="fas fa-fast-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_next()'"><i
+													class="fas fa-fast-forward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_last()'"><i
+													class="fas fa-step-forward"></i></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End section content -->
+
+
+	<!-- ADD MODAL -->
+	<div class="modal fade" id="addModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm mới bài
+						viết</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Tiêu đề bài viết</label> <input
+								class="form-control" type="text" id="subject"
+								placeholder="Tiêu đề bài viết"> <span
+								class="text-danger" id="subject_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Nội dung bài viết</label> <input
+								class="form-control" type="text" id="body"
+								placeholder="Nội dung bài viết"> <span
+								class="text-danger" id="body_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Lượt xem</label> <input
+								class="form-control" type="text" id="view"
+								placeholder="Lượt xem"> <span class="text-danger"
+								id="view_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Mã liên kết</label> <input
+								class="form-control" type="text" id="slug"
+								placeholder="Mã liên kết"> <span class="text-danger"
+								id="slug_error"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Hình ảnh</label> <input
+							class="form-control" type="file" id="fileInput"
+							onchange="uploadFile()"> <span class="text-danger"
+							id="image_error"></span>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Thuộc sản phẩm</label> <select
+							class="form-select form-control" id="productId"
+							aria-label="Default select example">
+							<option th:each="item: ${@Utils.products}" th:text="${item.name}"
+								th:value="${item.id}"></option>
+						</select> <span class="text-danger" id="productId_error"></span>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Mô tả</label>
+						<textarea class="form-control" type="text" id="description"
+							placeholder="Mô tả" rows="6"></textarea>
+						<span class="text-danger" id="description_error"></span>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Trạng thái</label>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" value="true"
+								name="isActive" checked>Tồn tại <label
+								class="form-check-label"></label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" value="false"
+								name="isActive">Không tồn tại <label
+								class="form-check-label"></label>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doCreate()'">Thêm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT MODAL -->
+	<div class="modal fade" id="editModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Chinh sửa bài
+						viết</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<input type="hidden" id="idEdit" />
+						<div class="form-group col-md-6">
+							<label class="form-label">Tiêu đề bài viết</label> <input
+								class="form-control" type="text" id="subjectEdit"
+								placeholder="Tiêu đề bài viết">
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Nội dung bài viết</label> <input
+								class="form-control" type="text" id="bodyEdit"
+								placeholder="Nội dung bài viết">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Mã liên kết</label> <input
+								class="form-control" type="text" id="slugEdit"
+								placeholder="Mã liên kết">
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Lượt xem</label> <input
+								class="form-control" type="text" id="viewEdit"
+								placeholder="Lượt xem">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Hình ảnh</label> <input
+							class="form-control" type="file" id="fileEdit"
+							onchange="uploadUpdateFile()">
+					</div>
+					<div class="form-group">
+						<label class="form-label">Thuộc sản phẩm</label> <select
+							class="form-select form-control" id="productIdEdit"
+							aria-label="Default select example">
+							<option th:each="item: ${@Utils.products}" th:text="${item.name}"
+								th:value="${item.id}"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Mô tả</label>
+						<textarea class="form-control" type="text" rows="6"
+							id="descriptionEdit" placeholder="Mô tả"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doUpdate()'">Cập nhật</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/admin/assets/js/management/post.js}"></script>
+</body>
+</html>
+
+

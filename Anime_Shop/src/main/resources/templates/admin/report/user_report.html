@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body style="margin-top: 70px">
+	<script
+		src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+	<table class="table mt-5" style="width: 800px; margin-left: 400px">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Tên người dùng</th>
+				<th scope="col">Email</th>
+				<th scope="col">Số lượng sản phẩm mua</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="re,index:${report}">
+				<td>[[${index.index}]]</td>
+				<td>[[${re.username}]]</td>
+				<td>[[${re.email}]]</td>
+				<td>[[${re.count}]]</td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<div style="width: 900px; margin-left: 330px;">
+		<canvas id="myChart" style="margin-top: 10px"></canvas>
+
+	</div>
+
+	
+
+	<script th:inline="javascript">
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+	type: 'bar',
+	  options: {},
+    data: {
+        labels: [[${surveyMap.keySet()}]],
+        datasets: [{
+            label: 'Số lượng' ,
+            data: [[${surveyMap.values()}]],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<div class="breadcrumb-area">
+      <div class="container">
+        <div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Đăng ký</li>
+				</ul>
+			</div>
+      </div>
+    </div>
+	<!-- Kenne's Breadcrumb Area End Here -->
+	<!-- Begin Kenne's Login Register Area -->
+	<div class="kenne-login-register_area">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-10 mx-auto col-xs-12">
+					<form action="/anime-shop/signup" enctype="multipart/form-data"
+						method="post" modelAttribute="user">
+						<span th:if="${mess}">
+							<p style="text-align: center;">[[${mess}]]</p>
+						</span>
+						<div class="login-form">
+							<h4 class="login-title text-center" style="color: #a8741a;">Đăng ký</h4>
+							<div class="row">
+								<div class="col-md-6 col-12 mb--20">
+									<label>Tên Đăng Nhập</label> <input type="text" name="username"
+										placeholder="Tên Đăng Nhập" /> <span th:if="${fieldUsername}">
+										<label style="color: red">[[${fieldUsername}]]</label>
+									</span>
+								</div>
+								<div class="col-md-6 col-12 mb--20">
+									<label>Họ Tên</label> <input type="text" name="fullname"
+										placeholder="Họ Tên" /> <span th:if="${fieldFullname}">
+										<label style="color: red">[[${fieldFullname}]]</label>
+									</span>
+								</div>
+								<div class="col-md-12">
+									<label>Địa Chỉ Email</label> <input type="email" name="email"
+										placeholder="Địa chỉ email" /> <span th:if="${fieldEmail}">
+										<label style="color: red">[[${fieldEmail}]]</label>
+									</span>
+								</div>
+
+								<div class="col-md-6">
+									<label>Mật Khẩu</label> <input type="password" name="password"
+										placeholder="Mật khẩu" /> <span th:if="${fieldPassword}">
+										<label style="color: red">[[${fieldPassword}]]</label>
+									</span>
+								</div>
+								<div class="col-md-6">
+									<label>Nhập Lại Mật Khẩu</label> <input type="password"
+										name="password2" placeholder="Nhập lại mật khẩu" />
+								</div>
+								<div class="col-md-6">
+									<label>Giới Tính</label>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" value="true"
+											style="margin-left: -150px" name="gender"
+											id="flexRadioDefault1"> <label
+											class="form-check-label" for="flexRadioDefault1"> Nam
+										</label> <input class="form-check-input" type="radio" value="false"
+											style="margin-left: -150px" name="gender"
+											id="flexRadioDefault2" checked> <label
+											class="form-check-label" for="flexRadioDefault2"> Nữ</label>
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<label>Hình Ảnh</label>
+									<div class="custom-file">
+										<input type="file" class="custom-file-input" id="customFile"
+											onchange="chooseFile(this)" name="imageFile" autofocus/>
+										<label class="custom-file-label" for="customFile">Chọn Ảnh</label>
+									</div>
+								</div>
+								<div class="col mt-3" style="margin: auto;">
+									<img src="@{|/assets/images/${user.imageName}|}"
+										class="rounded-circle mx-auto" id="image" width="120px"
+										height="120px" style="display: none;" />
+								</div>
+								<div class="col-12 text-center mt-4">
+									<button class="kenne-register_btn mx-auto" style="width: 30%; border-radius: 20px 20px 20px 20px">Đăng kí</button>
+									<a th:href="@{/anime-shop/login}" class="text-primary" style="margin-top: 10px; display: inline-block;">Bạn đã có tài khoản? Đăng nhập ngay</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function chooseFile(fileInput) {
+			if (fileInput.files && fileInput.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					$('#image').attr('src', event.target.result);
+					document.getElementById("image").style.display = 'block';
+				}
+				reader.readAsDataURL(fileInput.files[0]);
+			}
+		}
+	</script>
+
+	<!-- Kenne's Login Register Area  End Here -->
+</body>
+</html>

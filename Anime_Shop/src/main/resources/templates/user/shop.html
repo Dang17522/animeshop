@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<!-- Begin Kenne's Breadcrumb Area -->
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Mua sắm</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Breadcrumb Area End Here -->
+
+	<!-- Begin Kenne's Content Wrapper Area -->
+	<div class="kenne-content_wrapper">
+		<div class="container">
+			<div class="row">
+				<div class="col-xl-3 col-lg-4 order-2 order-lg-1">
+					<div class="kenne-sidebar-catagories_area">
+						<div class="kenne-sidebar_categories mb-5">
+							<div class="kenne-categories_title first-child">
+								<h5>Tìm kiếm từ khóa</h5>
+							</div>
+							<form th:action="@{/anime-shop/shop/search}" method="GET">
+								<div class="input-group">
+									<input type="text" class="form-control" name="keyword"
+										th:value="${keyword}"
+										aria-label="Amount (to the nearest dollar)"
+										placeholder="Nhập từ khóa tìm kiếm">
+									<div class="input-group-append">
+										<span class="input-group-text bg-white"><button>
+												<i class="ion-ios-search"></i>
+											</button></span>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="kenne-sidebar_categories">
+							<div class="kenne-categories_title first-child">
+								<h5>Lọc theo mức giá</h5>
+							</div>
+							<div class="price-filter">
+
+								<div id="slider-range"></div>
+								<div class="price-slider-amount">
+									<div class="label-input">
+										<label>Giá : </label> <input type="text" id="amount"
+											name="price" placeholder="Add Your Price"
+											style="width: 200px;" />
+										<form th:action="@{/anime-shop/shop/searchPrice}" method="GET">
+											<input type="hidden" id="minamount" name="min"
+												th:value="${min}"> <input type="hidden"
+												id="maxamount" name="max" th:value="${max}">
+											<button class="filter-btn" type="submit">Lọc</button>
+										</form>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="kenne-sidebar_categories category-module">
+							<div class="kenne-categories_title">
+								<h5>Danh mục sản phẩm</h5>
+							</div>
+							<div class="sidebar-categories_menu">
+								<ul>
+									<li><a th:href="@{/anime-shop/shop}">Tất cả</a></li>
+									<li class="has-sub"
+										th:each="itemParent: ${@Utils.categoryParents}"><a
+										th:text="${itemParent.name}"><i class="ion-ios-plus-empty"></i></a>
+										<ul>
+											<li th:each="item: ${itemParent.categories}"><a
+												th:text="${item.name}"
+												th:href="@{|/anime-shop/shop/category/${item.name}|}"></a></li>
+										</ul></li>
+								</ul>
+							</div>
+						</div>
+						<div class="kenne-sidebar_categories">
+							<div class="kenne-categories_title">
+								<h5>Kích thước</h5>
+							</div>
+							<ul class="sidebar-checkbox_list">
+								<li th:each="item: ${@Utils.sizes}"><a
+									th:href="@{|/anime-shop/shop/size/${item}|}" th:text="${item}"></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-9 col-lg-8 order-1 order-lg-2">
+					<div class="shop-toolbar">
+						<div class="product-view-mode">
+							<a class="active grid-3" data-target="gridview-3"
+								data-toggle="tooltip" data-placement="top" title="Grid View"><i
+								class="fa fa-th"></i></a> <a class="list" data-target="listview"
+								data-toggle="tooltip" data-placement="top" title="List View"><i
+								class="fa fa-th-list"></i></a>
+						</div>
+						<div class="product-page_count">
+							<p>Hiển thị [[${currentPage}]] trong tổng số
+								[[${totalPages}]] trang</p>
+						</div>
+						<div class="product-item-selection_area">
+							<div class="product-short">
+								<label class="select-label">Tiêu chí sắp xếp:</label> <select
+									class="nice-select myniceselect"
+									onchange="location = this.value;">
+									<option value="/anime-shop/shop">Mặc Định</option>
+									<option value="/anime-shop/shop/sortPriceDesc">Giá Cao
+										- Thấp</option>
+									<option value="/anime-shop/shop/sortPriceAsc">Giá Thấp
+										- Cao</option>
+									<option value="/anime-shop/shop/sortProductDiscount">Khuyến
+										Mãi Hot</option>
+									<option value="/anime-shop/shop/sortView">Xem Nhiều</option>
+								</select>
+
+							</div>
+						</div>
+					</div>
+					<div class="text-center" th:if="${products.empty}">
+						<h3 class="mt-5" style="color: #A8741A">Sản phẩm này hiện tại
+							chưa bán!</h3>
+					</div>
+					<div class="shop-product-wrap grid gridview-3 row">
+						<div class="col-lg-4 col-md-4 col-sm-6"
+							th:each="item: ${products}">
+							<div class="product-item">
+								<div class="single-product" style="height: 450px;">
+									<div class="product-img">
+										<a th:href="@{|/anime-shop/shop/${item.slug}|}"> <img
+											class="primary-img"
+											th:src="@{|/assets/images/${item.getImages().get(0).getName()}|}"
+											height="250px" alt="Kenne's Product Image" /> <img
+											class="secondary-img"
+											th:src="@{|/assets/images/${item.getImages().get(1).getName()}|}"
+											height="250px" alt="Kenne's Product Image" />
+										</a> <span th:if="${item.quantity > 0}" class="sticker-2">Còn
+											hàng</span> <span th:unless="${item.quantity > 0}"
+											class="sticker-2 bg-warning text-danger font-weight-bold">[[${@Utils.outOfStock}]]</span>
+										<div class="add-actions">
+											<ul>
+												<li class="quick-view-btn" data-toggle="modal"
+													data-target="#exampleModalCenter"><a
+													th:href="@{|/anime-shop/shop/${item.slug}|}"
+													data-toggle="tooltip" data-placement="right"
+													title="Chi tiết"><i class="ion-ios-eye"></i></a></li>
+												<li th:if="${item.quantity > 0}"><a
+													th:attr="onclick='addToCart(\'' + ${item.id} + '\')'"
+													data-toggle="tooltip" data-placement="right"
+													title="Thêm vào giỏ"><i class="ion-bag"></i></a></li>
+											</ul>
+										</div>
+									</div>
+									<div class="product-content">
+										<div class="product-desc_info">
+											<h3 class="product-name">
+												<a th:href="@{|/anime-shop/shop/${item.slug}|}"
+													th:text="${item.name}"></a>
+											</h3>
+											<div class="price-box">
+												<span class="new-price"
+													th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span>
+											</div>
+											<div class="rating-box">
+												<ul>
+													<li><i class="ion-ios-star"></i></li>
+													<li><i class="ion-ios-star"></i></li>
+													<li><i class="ion-ios-star"></i></li>
+													<li class="silver-color"><i class="ion-ios-star-half"></i>
+													</li>
+													<li class="silver-color"><i
+														class="ion-ios-star-outline"></i></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="list-product_item">
+								<div class="single-product">
+									<div class="product-img">
+										<a th:href="@{|/anime-shop/shop/${item.slug}|}"> <img
+											th:src="@{|/assets/images/${item.getImages().get(0).getName()}|}"
+											alt="Kenne's Product Image" />
+										</a>
+									</div>
+									<div class="product-content">
+										<div class="product-desc_info">
+											<div class="price-box">
+												<span class="new-price"
+													th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span>
+											</div>
+											<h6 class="product-name">
+												<a th:href="@{|/anime-shop/shop/${item.slug}|}"
+													th:text="${item.name}"></a>
+											</h6>
+											<div class="rating-box">
+												<ul>
+													<li><i class="ion-ios-star"></i></li>
+													<li><i class="ion-ios-star"></i></li>
+													<li><i class="ion-ios-star"></i></li>
+													<li class="silver-color"><i class="ion-ios-star-half"></i>
+													</li>
+													<li class="silver-color"><i
+														class="ion-ios-star-outline"></i></li>
+												</ul>
+											</div>
+											<div class="product-short_desc">
+												<p th:text="${item.description}"></p>
+											</div>
+										</div>
+										<div class="add-actions">
+											<ul>
+												<li class="quick-view-btn" data-toggle="modal"
+													data-target="#exampleModalCenter"><a
+													th:href="@{|/anime-shop/shop/${item.slug}|}"
+													data-toggle="tooltip" data-placement="top" title="Chi tiết"><i
+														class="ion-ios-eye"></i></a></li>
+												<li th:if="${item.quantity > 0}"><a
+													th:attr="onclick='addToCart(\'' + ${item.id} + '\')'"
+													data-toggle="tooltip" data-placement="top"
+													title="Thêm vào giỏ"><i class="ion-bag"></i></a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" th:if="${totalPages > 1}">
+						<div class="col-lg-12">
+							<div class="kenne-paginatoin-area">
+								<div class="row">
+									<div class="col-lg-12">
+										<ul class="kenne-pagination-box primary-color">
+											<li
+												th:style="${currentPage == 1} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+												<a
+												th:href="@{${currentPage > 1} ? ${'?page=' + (currentPage - 1)}}">Trước</a>
+											</li>
+											<li th:each="i: ${#numbers.sequence(1, totalPages)}"
+												th:class="${currentPage == i} ? 'active' : ''"><a
+												th:href="@{'?page=' + ${i}}" th:text="${i}"></a></li>
+											<li
+												th:style="${currentPage == totalPages} ? 'pointer-events: none; color: currentColor; cursor: not-allowed; opacity: 0.5; ' : ''">
+												<a class="Next"
+												th:href="@{${curretnPage < totalPages} ? ${'?page=' + (currentPage + 1)}}">Tiếp</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Content Wrapper Area End Here -->
+
+	<script>
+		const addToCart = (productId) =>{
+	   			const url = '/api/cart/update?productId=' + productId + '&quantity=1&isReplace=false';
+				$.ajax({
+					url : url,
+					type : 'GET',
+					dataType : 'json',
+					success : function(data) {
+						$('#headerTotalPrice').text(formatCurrency(data.totalPrice));
+						$('#headerTotalQuantity1').text(data.totalQuantity);
+						$('#headerTotalQuantity2').text(data.totalQuantity);
+					},
+					error : function(error) {
+						console.log(error);
+						alert("Thêm giỏ hàng thất bại!");
+					}
+				});
+	   		}
+	   		
+	   	const formatCurrency = (x) => {
+				return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
+			}
+	</script>
+</body>
+</html>

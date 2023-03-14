@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<!-- Begin Kenne's Breadcrumb Area -->
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Giỏ hàng</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Breadcrumb Area End Here -->
+	<!-- Begin Uren's Cart Area -->
+	<div class="kenne-cart-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<form action="javascript:void(0)">
+						<div class="table-content table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th class="kenne-product-remove">xóa</th>
+										<th class="kenne-product-thumbnail">hình ảnh</th>
+										<th class="cart-product-name">sản phẩm</th>
+										<th class="kenne-product-price">giá tiền</th>
+										<th class="kenne-product-quantity">số lượng</th>
+										<th class="kenne-product-subtotal">tổng giá</th>
+									</tr>
+								</thead>
+								<tbody id="viewCartFragment">
+									<tr th:each="item : ${session.currentCart.details}">
+										<td class="kenne-product-remove"><a
+											th:attr="onclick='removeCart(\'' + ${item.key} + '\')'"><i
+												class="fa fa-trash" title="Xóa"></i></a></td>
+										<td class="kenne-product-thumbnail"><a
+											th:href="@{|/anime-shop/shop/${item.value.slug}|}"><img
+												th:src="@{|/assets/images/${item.value.image}}|"
+												class="rounded" width="70px;" height="70px;"
+												alt="Uren's Cart Thumbnail" /></a></td>
+										<td class="kenne-product-name"><a
+											th:href="@{|/anime-shop/shop/${item.value.slug}|}"
+											th:text="${item.value.name}"></a></td>
+										<td class="kenne-product-price"><span class="amount"
+											th:text="${#numbers.formatDecimal(item.value.price, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span>
+										</td>
+										<td class="quantity">
+											<div class="cart-plus-minus">
+												<input class="cart-plus-minus-box" type="number"
+													th:id="quantity + ${item.key}"
+													th:value="${item.value.quantity}"
+													th:attr="onchange='updateQuantity(\'' + ${item.key} + '\')'">
+												<div class="dec qtybutton">
+													<i class="fa fa-angle-down"></i>
+												</div>
+												<div class="inc qtybutton">
+													<i class="fa fa-angle-up"></i>
+												</div>
+											</div>
+										</td>
+										<td class="product-subtotal"><span class="amount"
+											th:text="${#numbers.formatDecimal(item.value.quantity * item.value.price, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<div class="coupon-all">
+									<div class="coupon">
+										<input class="button" value="Tiếp tục mua hàng"
+											th:formaction="@{/anime-shop/shop}"
+											style="background-color: #a8741a" type="submit" />
+									</div>
+									<div class="coupon2">
+										<input class="button" name="update_cart"
+											value="Xóa sạch giỏ hàng"
+											th:formaction="@{/anime-shop/shop/clearAll}"
+											style="background-color: #a8741a" type="submit" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-5 ml-auto">
+								<div class="cart-page-total">
+									<h2>Thông số giỏ hàng</h2>
+									<ul>
+										<li>Tổng mặt hàng <span id="headerTotalQuantity3"
+											th:text="${session.currentCart.totalQuantity}"></span></li>
+										<li>Tổng tiền thanh toán<span id="headerTotalPrice2"
+											th:text="${#numbers.formatDecimal(session.currentCart.totalPrice, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span></li>
+									</ul>
+									<a th:href="@{/anime-shop/shop/checkout}" style="background-color: #a8741a">Thanh toán</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Uren's Cart Area End Here -->
+
+	<script>
+		const removeCart = (productId) =>{
+			var url = '/anime-shop/shop/update?productId=' + productId + '&quantity=0&isReplace=false';
+			$.get(url).done(function(data){
+				$('#viewCartFragment').replaceWith(data);
+				refreshData()
+			});
+		}
+		
+		const updateQuantity = (productId)=>{
+			var inputId = '#quantity' + productId;
+			var newQuantity = $(inputId).val();
+			var url = '/anime-shop/shop/update?productId=' + productId + '&quantity=' + newQuantity + '&isReplace=true';
+			$.get(url).done(function(data){
+				$('#viewCartFragment').replaceWith(data);
+				refreshData()
+			});
+		}
+		
+		const refreshData = () =>{
+			var url = '/api/cart/refresh-data';
+			$.ajax({
+				url: url,
+				type: 'GET',
+				dataType: 'json',
+				success: function(data){
+					$('#headerTotalPrice').text(formatCurrency(data.totalPrice));
+					$('#headerTotalPrice2').text(formatCurrency(data.totalPrice));
+					$('#headerTotalQuantity1').text(data.totalQuantity);
+					$('#headerTotalQuantity2').text(data.totalQuantity);
+					$('#headerTotalQuantity3').text(data.totalQuantity);
+				},
+				error: function(error){
+					console.log(error);
+					alert(error);
+				}
+			});
+		}
+		
+		const formatCurrency = (x) => {
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
+		}
+	</script>
+</body>
+</html>

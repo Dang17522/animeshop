@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body th:onload="openMessage()">
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Thanh toán</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Begin Kenne's Checkout Area -->
+	<div class="checkout-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="coupon-accordion">
+						<h3>
+							Lựa chọn phương thức thanh toán? <span style="color: #a8741a;"
+								id="showlogin">-Nhấn vào để chọn-</span>
+						</h3>
+						<div id="checkout-login" class="coupon-content">
+							<div class="coupon-info">
+								<ul>
+									<li style="cursor: pointer;"
+										th:each="item: ${@Utils.paymentMethods}"
+										th:attr="onclick='openPayment(\'' + ${item.id} + '\', \'' + ${item.name} + '\')'"
+										class="coupon-text">[[${item.name}]] <img
+										th:src="@{|/assets/images/${item.icon}|}"
+										style="width: 40px; height: 40px;" class="img-thumbnail"
+										alt="" /></li>
+								</ul>
+							</div>
+						</div>
+						<h3>
+							Nhập mã giảm giá? <span style="color: #a8741a;" id="showcoupon">-Nhấn
+								vào để nhập-</span>
+						</h3>
+						<div id="checkout_coupon" class="coupon-checkout-content">
+							<div class="coupon-info">
+								<form action="javascript:void(0)">
+									<p class="checkout-coupon">
+										<input placeholder="Nhập mã giảm giá" type="text"> <input
+											class="coupon-inner_btn" value="Áp dụng" type="submit">
+									</p>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-6 col-12" style="display: none;" id="paymentCash">
+						<div class="checkbox-form">
+							<h3>Thông tin giao hàng</h3>
+							<div class="row">
+								<input id="paymentMethodId" type="hidden">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Số điện thoại nhận hàng *</label> <input
+											class="form-control" id="phone" placeholder="Nhập số điện thoại"
+											type="number">
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label>Địa chỉ nhận hàng *</label>
+										<textarea class="form-control" id="address" rows="5"
+											placeholder="Nhập địa chỉ"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+				</div>
+				<div class="col-lg-6 col-12">
+					<div class="your-order">
+						<h3 style="color: #a8741a;">HÓA ĐƠN CỦA BẠN</h3>
+						<div class="your-order-table table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th class="cart-product-name">Sản phẩm</th>
+										<th class="cart-product-total">Giá</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="cart_item"
+										th:each="item: ${session.currentCart.details}">
+										<td class="cart-product-name">[[${item.value.name}]]<strong
+											class="product-quantity"> ×
+												[[${item.value.quantity}]]</strong></td>
+										<td class="cart-product-total"><span class="amount"
+											th:text="${#numbers.formatDecimal(item.value.price, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span></td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr class="order-total">
+										<th>Tổng tiền</th>
+										<td><strong><span class="amount"
+												id="headerTotalPrice"
+												th:text="${#numbers.formatDecimal(session.currentCart.totalPrice, 1, 'POINT', 3, 'POINT') + ' VNĐ'}"></span></strong></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div class="payment-method">
+							<div class="payment-accordion">
+								<div class="order-button-payment">
+									<input value="Đặt hàng" type="submit" th:attr="onclick='checkout()'">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Checkout Area End Here -->
+	<script type="text/javascript">
+		const openPayment = (id, name) =>{
+				if (name.startsWith('Tiền mặt')) {
+					document.getElementById("paymentCash").style.display = "block";
+					document.getElementById("paymentMethodId").value = id;
+				} else {
+					alert('FORM THANH TOÁN BẰNG ATM CHƯA LÀM !!!')
+				}
+		}
+		
+		const openMessage = () =>{
+			Swal.fire({
+				  title: 'Vui lòng chọn phương thức thanh toán trước khi đặt hàng. Xin cảm ơn!',
+				  width: 600,
+				  padding: '3em',
+				  color: '#716add',
+				  background: '#fff url(https://sweetalert2.github.io/images/trees.png)',
+				  backdrop: `
+				    rgba(0,0,123,0.4)
+				    url("https://sweetalert2.github.io/images/nyan-cat.gif")
+				    left top
+				    no-repeat
+				  `
+				})
+			
+		}
+		
+		const checkout = ()=>{
+			var paymentMethodId = $('#paymentMethodId').val();
+			var address = $('#address').val();
+			var phone = $('#phone').val();
+			if(paymentMethodId == 0){
+				Swal.fire("Thông báo", "Bạn chưa chọn phương thức thanh toán!", "error");
+				return;
+			}
+			if(phone.trim() == '' || phone  == null){
+				Swal.fire("Thông báo", "Vui lòng nhập số điện thoại!", "error");
+				return;
+			}
+			if(address.trim() == '' || address == null){
+				Swal.fire("Thông báo", "Vui lòng nhập địa chỉ!", "error");
+				return;
+			}
+			
+			var url = '/api/cart/checkout?address=' + address + '&phone=' + phone + '&paymentMethodId=' + paymentMethodId;
+			$.ajax({
+				url: url,
+				type: 'GET',
+				statusCode: {
+					200: handle200,
+					400: handle400,
+					401: handle401
+				}
+			});
+		}
+		
+		function handle200(){
+			Swal.fire("Hoàn thành", "Thanh toán thành công!", "success");
+			window.location.href = '/anime-shop/index';
+		}
+		
+		function handle400(){
+			Swal.fire("Thông báo", "Thanh toán thất bại, Vui lòng thử lại!", "error");
+		}
+		
+		function handle401(){
+			Swal.fire("Thông báo", "Vui lòng đăng nhập trước khi thanh toán!", "error");
+			window.location.href = '/anime-shop/login'
+		}
+	</script>
+</body>
+</html>

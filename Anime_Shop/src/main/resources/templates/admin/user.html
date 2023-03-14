@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body th:onload="getCustomers()">
+	<!-- start section content -->
+	<div class="content-body">
+		<div class="warper container-fluid">
+			<div class="all-patients main_container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card">
+							<div class="card-header fix-card">
+								<div class="row">
+									<div class="col-8">
+										<h4 class="card-title">Danh sách Khách hàng</h4>
+									</div>
+									<div class="col-4 float-end">
+										<button type="button" data-bs-toggle="modal"
+											data-bs-target="#addModal" class="btn btn-primary float-end">Thêm
+											mới</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<form class=" col-md-6 mb-3">
+									<div class="input-group">
+										<input type="text" class="form-control" id="keyword_search"
+											aria-label="Amount (to the nearest dollar)"
+											placeholder="Nhập từ khóa tìm kiếm"
+											th:attr="onkeydown='doSearch()'">
+										<div class="input-group-append">
+											<span class="input-group-text bg-white"> <i
+												class="fas fa-search"></i>
+											</span>
+										</div>
+									</div>
+								</form>
+								<div class="table-responsive">
+									<table class="table table-borderless table-hover">
+										<thead class="text-center">
+											<tr>
+												<th class="text-primary">Tên người dùng</th>
+												<th class="text-primary">Họ tên</th>
+												<th class="text-primary">Email</th>
+												<th class="text-primary">Hình ảnh</th>
+												<th class="text-primary">Giới tính</th>
+												<th class="text-primary">Người tạo</th>
+												<th class="text-primary">Người sửa</th>
+												<th class="text-primary">Ngày tạo</th>
+												<th class="text-primary">Ngày sửa</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody id="dataUser" class="text-center">
+										</tbody>
+									</table>
+									<nav>
+										<ul class="pagination justify-content-center mt-5">
+											<li class="page-item"><a th:attr="onclick='btn_first()'"
+												class="page-link text-primary"><i
+													class="fas fa-step-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_previous()'"><i
+													class="fas fa-fast-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_next()'"><i
+													class="fas fa-fast-forward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_last()'"><i
+													class="fas fa-step-forward"></i></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End section content -->
+
+
+	<!-- ADD MODAL -->
+	<div class="modal fade" id="addModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm mới
+						User</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group">
+							<label class="form-label">Tên người dùng</label> <input
+								class="form-control" type="text" id="username"
+								placeholder="Tên người dùng"> <span class="text-danger"
+								id="username_error"></span>
+						</div>
+						<div class="form-group">	
+							<label class="form-label">Họ tên</label> <input
+								class="form-control" type="text" id="fullname"
+								placeholder="Họ và tên"> <span class="text-danger"
+								id="fullname_error"></span>
+						</div>
+						<div class="form-group">	
+							<label class="form-label">Mật khẩu</label> <input
+								class="form-control" type="text" id="password"
+								placeholder="Mật khẩu"> <span class="text-danger"
+								id="password_error"></span>
+						</div>
+						<div class="form-group">	
+							<label class="form-label">Email</label> <input
+								class="form-control" type="text" id="email"
+								placeholder="Email"> <span class="text-danger"
+								id="email_error"></span>
+						</div>
+						<div class="form-group">
+							<label class="form-label">Giới tính</label>
+							<div >
+								<input type="radio" class="form-check-input" value="true"
+									name="gender" checked>Nam <label
+									class="form-check-label"></label>
+							</div>
+							<div >
+								<input type="radio" class="form-check-input" value="false"
+									name="gender" >Nữ<label
+									class="form-check-label"></label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="form-label">Trạng thái</label>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" value="true"
+									name="isActive" checked="checked">Tồn tại <label
+									class="form-check-label"></label>
+							</div>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" value="false"
+									name="isActive">Không tồn tại <label
+									class="form-check-label"></label>
+							</div>
+						</div>
+						<div class="form-group">
+						<label class="form-label">Hình ảnh</label> <input
+							class="form-control" type="file" id="fileInput"
+							onchange="uploadFile()"> <span class="text-danger"
+							id="image_error"></span>
+					</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doCreate()'">Thêm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT MODAL -->
+	<div class="modal fade" id="editModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thông
+						tin người sử dụng</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group">
+							<input type="hidden" id="idEdit" />
+							<div class="form-group">
+								<label class="form-label">Tên người dùng</label> <input
+									class="form-control" type="text" id="usernameEdit"
+									placeholder="Tên người dùng">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="form-group">
+								<label class="form-label">Họ tên</label> <input
+									class="form-control" type="text" id="fullnameEdit"
+									placeholder="Họ tên người dùng">
+							</div>
+						</div>
+						<div class="form-group">	
+							<label class="form-label">Mật khẩu</label> <input
+								class="form-control" type="text" id="passwordEdit"
+								placeholder="Mật khẩu"> <span class="text-danger"
+								id="password_error"></span>
+						</div>
+							<div class="form-group">	
+							<label class="form-label">Email</label> <input
+								class="form-control" type="text" id="emailEdit"
+								placeholder="Email"> <span class="text-danger"
+								id="email_error"></span>
+						</div>
+						<div class="form-group">
+							<label class="form-label">Giới tính</label>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" value="true"
+									name="gender" id="genderEdit" checked="checked">Nam <label
+									class="form-check-label"></label>
+							</div>
+							<div class="form-check">
+								<input type="radio" class="form-check-input" value="false"
+									name="gender" id="genderEdit" >Nữ<label
+									class="form-check-label"></label>
+							</div>
+						</div>
+						<div class="form-group">
+						<label class="form-label">Hình ảnh</label> <input
+							class="form-control" type="file" id="fileEdit"
+							onchange="uploadUpdateFile()">
+					</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Huỷ</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doUpdate()'">Cập nhật</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/admin/assets/js/management/user.js}"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body th:onload="getAll()">
+	<!-- start section content -->
+	<div class="content-body">
+		<div class="warper container-fluid">
+			<div class="all-patients main_container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card">
+							<div class="card-header fix-card">
+								<div class="row">
+									<div class="col-8">
+										<h4 class="card-title">Danh sách sản phẩm</h4>
+									</div>
+									<div class="col-4 float-end">
+										<button type="button" data-bs-toggle="modal"
+											data-bs-target="#addModal" class="btn btn-primary float-end">Thêm
+											mới</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<form class=" col-md-6 mb-3">
+									<div class="input-group">
+										<input type="text" class="form-control" id="keyword_search"
+											aria-label="Amount (to the nearest dollar)"
+											placeholder="Nhập từ khóa tìm kiếm"
+											th:attr="onkeydown='doSearch()'">
+										<div class="input-group-append">
+											<span class="input-group-text bg-white"> <i
+												class="fas fa-search"></i>
+											</span>
+										</div>
+									</div>
+								</form>
+								<div class="table-responsive">
+									<table class="table table-borderless">
+										<thead class="text-center">
+											<tr>
+												<th class="text-primary">Mã</th>
+												<th class="text-primary">Tên</th>
+												<th class="text-primary">Số lượng</th>
+												<th class="text-primary">Giá</th>
+												<th class="text-primary">Lượt bán</th>
+												<th class="text-primary">Giảm</th>
+												<th class="text-primary">Tên nhân vật</th>
+												<th class="text-primary">Vật liệu</th>
+												<th class="text-primary">Seri</th>
+												<th class="text-primary">Trạng thái</th>
+												<th class="text-primary">Tiếp cận</th>
+												<th class="text-primary">Kích cỡ</th>
+												<th class="text-primary">Loại</th>
+												<th class="text-primary">Đơn vị</th>
+												<th class="text-primary">Người tạo</th>
+												<th class="text-primary">Người sửa</th>
+												<th class="text-primary">Ngày tạo</th>
+												<th class="text-primary">Ngày sửa</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody id="dataProduct" class="text-center">
+										</tbody>
+									</table>
+									<nav>
+										<ul class="pagination justify-content-center mt-5">
+											<li class="page-item"><a th:attr="onclick='btn_first()'"
+												class="page-link text-primary"><i
+													class="fas fa-step-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_previous()'"><i
+													class="fas fa-fast-backward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_next()'"><i
+													class="fas fa-fast-forward"></i></a></li>
+											<li class="page-item"><a class="page-link text-primary"
+												th:attr="onclick='btn_last()'"><i
+													class="fas fa-step-forward"></i></a></li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End section content -->
+
+
+	<!-- ADD MODAL -->
+	<div class="modal fade" id="addModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Thêm mới sản
+						phẩm</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Tên sản phẩm</label> <input
+								class="form-control" type="text" id="name"
+								placeholder="Tên sản phẩm"> <span class="text-danger"
+								id="name_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Số lượng sản phẩm</label> <input
+								class="form-control" type="number" id="quantity"
+								placeholder="Số lượng sản phẩm"> <span
+								class="text-danger" id="quantity_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Giá sản phẩm</label> <input
+								class="form-control" type="number" id="price"
+								placeholder="Giá sản phẩm"> <span class="text-danger"
+								id="price_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Mã liên kết</label> <input
+								class="form-control" type="text" id="slug"
+								placeholder="Mã liên kết"> <span class="text-danger"
+								id="slug_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Giảm giá</label> <input
+								class="form-control" type="number" id="discount"
+								placeholder="Giảm giá"> <span class="text-danger"
+								id="discount_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Tên nhân vật</label> <input
+								class="form-control" type="text" id="name_main"
+								placeholder="Tên nhân vật"> <span class="text-danger"
+								id="name_main_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Vật liệu</label> <input
+								class="form-control" type="text" id="material"
+								placeholder="Vật liệu"> <span class="text-danger"
+								id="material_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Seri</label> <input
+								class="form-control" type="text" id="series" placeholder="Seri">
+							<span class="text-danger" id="series_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Tình trạng sản phẩm</label> <input
+								class="form-control" type="text" id="status"
+								placeholder="Tình trạng sản phẩm"> <span
+								class="text-danger" id="status_error"></span>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Kích thước</label> <input
+								class="form-control" type="text" id="size"
+								placeholder="Kích thước"> <span class="text-danger"
+								id="size_error"></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-6">
+							<label class="form-label">Danh mục</label> <select
+								class="form-select form-control" id="category"
+								aria-label="Default select example">
+								<option th:each="item: ${@Utils.categories}"
+									th:text="${item.name}" th:value="${item.id}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label class="form-label">Đơn vị</label> <select
+								class="form-select form-control" id="unit_type"
+								aria-label="Default select example">
+								<option th:each="item: ${@Utils.unitTypes}"
+									th:text="${item.name}" th:value="${item.id}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Mô tả</label>
+						<textarea class="form-control" type="text" id="description"
+							placeholder="Mô tả" rows="6"></textarea>
+						<span class="text-danger" id="description_error"></span>
+					</div>
+					<div class="form-group">
+						<label class="form-label">Trạng thái</label>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" value="true"
+								name="isActive" checked>Tồn tại <label
+								class="form-check-label"></label>
+						</div>
+						<div class="form-check">
+							<input type="radio" class="form-check-input" value="false"
+								name="isActive">Không tồn tại <label
+								class="form-check-label"></label>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doCreate()'">Thêm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- EDIT MODAL -->
+	<div class="modal fade" id="editModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa danh
+						mục con</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<input type="hidden" id="idEdit" />
+						<div class="form-group">
+							<label class="form-label">Tên danh mục con</label> <input
+								class="form-control" type="text" id="nameEdit"
+								placeholder="Tên danh mục con">
+						</div>
+						<div class="form-group">
+							<label class="form-label">Danh mục cha</label> <select
+								class="form-select form-control" id="categoryParentEdit"
+								aria-label="Default select example">
+								<option th:each="item: ${@Utils.categoryParents}"
+									th:text="${item.name}" th:value="${item.id}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Hủy</button>
+					<button type="button" class="btn btn-primary"
+						th:attr="onclick='doUpdate()'">Cập nhật</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/admin/assets/js/management/product.js}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

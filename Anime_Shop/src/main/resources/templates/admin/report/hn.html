@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/admin/layout/layoutAdmin.html :: dynamic(~{::body})}">
+<body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+	<table class="table" style="width: 600px; margin-left: 500px; margin-top: 100px">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">hóa đơn</th>
+					<th scope="col">Tên sản phẩm</th>
+					<th scope="col">Giá</th>
+					<th scope="col">Số lượng</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="re,index:${report}">
+					<td >[[${index.index}]]</td>
+					<td>[[${re.orderid}]]</td>
+					<td>[[${re.name}]]</td>
+					<td>[[${{#numbers.formatDecimal(re.sum,0,'COMMA',2,'POINT')}}]]</td>
+					<td>[[${re.count}]]</td>
+					<td><a th:href="@{|/order/detail/${re.orderid}|}">Detail</a></td>
+				</tr>
+				<th th:each="re,index:${sum}" scope="row">Số lượng: [[${re.count}]] <br> Tổng: [[${{#numbers.formatDecimal(re.sum,0,'COMMA',0,'POINT')}}]]</th>
+				<tr >
+					
+					
+				</tr>
+			</tbody>
+		</table>
+		
+		<div style="width: 900px; margin-left: 330px;">
+			<canvas id="myChart" style="margin-top: 10px"></canvas>
+			
+		</div>
+	
+	<script th:inline="javascript">
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+	type: 'bar',
+	  options: {},
+    data: {
+        labels: [[${surveyMap.keySet()}]],
+        datasets: [{
+            label: 'Hôm nay: '+ [[${ngay}]] ,
+            data: [[${surveyMap.values()}]],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 3
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+
+</body>
+</html>

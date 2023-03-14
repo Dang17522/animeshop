@@ -1,0 +1,114 @@
+/*----------------------------------------*/
+/*  13 - Components - Banner
+/*----------------------------------------*/
+.banner-area{
+	padding: 90px 0 0;
+	.banner-item{
+		> .banner-img{
+			> a{
+				img{
+					width: 100%;
+				}
+			}
+		}
+	}
+	[class*="col-"]{
+		&:not(:last-child){
+			@include breakpoint(max-sm_device){
+				.banner-item{
+					padding-bottom: 30px;
+				}
+			}
+		}
+	}
+    &.banner-area-2{
+        padding: 90px 0 0;
+    }
+}
+/* ---Banner Area Three--- */
+.banner-area-3{
+	padding: 90px 0 0;
+	[class*="col-"]{
+		&:not(:last-child){
+			@include breakpoint(max-md_device){
+				padding-bottom: 30px;
+			}
+		}
+	}
+	.custom-col{
+		@include breakpoint(max-xxs_device){
+			flex: 0 0 100%;
+    		max-width: 100%;
+		}
+	}
+}
+/* ---Kenne's Banner Area Four--- */
+.kenne-banner_area-4{
+	background-image: url('../images/banner/1-6.jpg');
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	min-height: 565px;
+	position: relative;
+	padding-top: 0;
+	margin-top: 90px;
+	&:before{
+		content: "";
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.7);
+		width: 100%;
+		height: 100%;
+		@extend %basetransition;
+	}
+	.banner-content{
+		@include absCenter;
+		text-align: center;
+		width: 32%;
+		@include breakpoint(max-xl_device){
+			width: 45%;
+		}
+		@include breakpoint(max-lg_device){
+			width: 55%;
+		}
+		@include breakpoint(max-md_device){
+			width: 70%;
+		}
+		@include breakpoint(max-md_device){
+			width: 95%;
+		}
+		h3,
+		p,
+		a{
+			color: $white-color;
+		}
+		> h3{
+			font-size: 45px;
+			margin-bottom: 0;
+			padding-bottom: 15px;
+			@include breakpoint(max-xs_device){
+				font-size: 30px;
+			}
+		}
+		> p{
+			margin-bottom: 0;
+			padding-bottom: 15px;
+		}
+		> .contact-us{
+			padding-bottom: 25px;
+			> a{
+				font-weight: 600;
+			}
+		}
+		> .kenne-btn-ps_center{
+			> a{
+				&.kenne-btn{
+					border-radius: 4px;
+				}
+			}
+		}
+	}
+}
+/* ---Banner Area Four--- */
+.banner-area-5{
+    padding: 90px 0 0;
+}

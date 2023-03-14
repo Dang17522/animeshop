@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:fragment="dynamic(view)">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anime Store | Admin</title>
+<!-- Favicon icon -->
+<link rel="icon" type="image/png"
+	th:href="@{/admin/assets/images/admin.png}">
+<!-- Base Styling  -->
+<link rel="stylesheet" th:href="@{/admin/assets/main/css/fonts.css}">
+<link rel="stylesheet" th:href="@{/admin/assets/main/css/style.css}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+	<div id="main-wrapper" class="show">
+
+		<!-- menu -->
+		<th:block th:include="/admin/layout/_menu.html"></th:block>
+
+		<!-- header -->
+		<th:block th:include="/admin/layout/_header.html"></th:block>
+
+		<!--main -->
+		<div th:replace="${view}"></div>
+
+		<!-- footer -->
+		<th:block th:include="/admin/layout/_footer.html"></th:block>
+	</div>
+	<!-- JQuery v3.5.1 -->
+	<script th:src="@{/admin/assets/plugins/jquery/jquery3-2.1.min.js}"></script>
+
+	<!-- popper js -->
+	<script th:src="@{/admin/assets/plugins/popper/popper.min.js}"></script>
+
+	<!-- Bootstrap -->
+	<script th:src="@{/admin/assets/plugins/bootstrap/js/bootstrap.js}"></script>
+
+	<!-- Moment -->
+	<script th:src="@{/admin/assets/plugins/moment/moment.min.js}"></script>
+
+	<!-- Date Range Picker -->
+	<script
+		th:src="@{/admin/assets/plugins/daterangepicker/daterangepicker.min.js}"></script>
+
+	<!-- Datatable -->
+	<script
+		th:src="@{/admin/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+	<script th:src="@{/admin/assets/js/init-tdatatable.js}"></script>
+
+	<!-- Chart js -->
+<!-- 	<script th:src="@{/admin/assets/plugins/chart/chart/Chart.min.js}"></script> -->
+<!-- 	<script th:src="@{/admin/assets/js/charts-custom.js}"></script> -->
+
+
+	<!-- Main Custom JQuery -->
+	<script th:src="@{/admin/assets/js/toggleFullScreen.js}"></script>
+	<script th:src="@{/admin/assets/js/main.js}"></script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</body>
+</html>

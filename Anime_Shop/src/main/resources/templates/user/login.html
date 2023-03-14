@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{/user/layout/layoutUser.html :: dynamic(~{::body})}">
+<body>
+	<!-- Begin Kenne's Breadcrumb Area -->
+	<div class="breadcrumb-area">
+		<div class="container">
+			<div class="breadcrumb-content">
+				<h2 style="color: white">ANIME STORE</h2>
+				<ul>
+					<li style="color: white"><a style="color: white"
+						th:href="@{/anime-shop/index}">Trang chủ</a></li>
+					<li style="color: white" class="active">Đăng nhập</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Breadcrumb Area End Here -->
+	<!-- Begin Kenne's Login Register Area -->
+	<div class="kenne-login-register_area">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mx-auto">
+					<!-- Login Form s-->
+					<form th:action="@{/anime-shop/login}" method="POST">
+						<div class="login-form">
+							<h4 class="login-title text-center" style="color: #a8741a;">ĐĂNG
+								NHẬP</h4>
+							<div class="row">
+								<div class="col-md-12 col-12" th:if="${message}">
+									<div class="alert alert-danger" th:text="${message}"></div>
+								</div>
+								<div class="col-md-12 col-12">
+									<label>Tên người dùng*</label> <input type="text"
+										placeholder="Nhập tại đây..." name="username" id="username" />
+								</div>
+								<div class="col-12 mb--20">
+									<label>Mật khẩu*</label> <input type="password"
+										placeholder="Nhập tại đây..." name="password" id="password" />
+								</div>
+								<div class="col-md-8">
+									<div class="check-box">
+										<input type="checkbox" id="remember_me" name="remember-me" />
+										<label for="remember_me">Ghi Nhớ</label>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="forgotton-password_info">
+										<a th:href="@{/anime-shop/forgotpassword}"> Quên mật khẩu?</a>
+									</div>
+								</div>
+								<div class="col-md-12 text-center">
+									<button class="kenne-login_btn mx-auto" style="width: 100%; border-radius: 20px 20px 20px 20px;"
+										type="submit">Đăng Nhập</button>
+									<a href="/oauth2/authorization/google"
+										class="kenne-login_btn mx-auto"
+										style="width: 100%; background-color: #4285f4; color: #fff; border-radius: 20px 20px 20px 20px;"><i class="text-warning fab fa-google"></i> Đăng
+										nhập với Google</a>
+										<a th:href="@{/anime-shop/signup}" class="text-primary" style="margin-top: 10px; display: inline-block;">Bạn chưa có tài khoản? Tạo ngay</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Kenne's Login Register Area  End Here -->
+</body>
+</html>
